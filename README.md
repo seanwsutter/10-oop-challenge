@@ -8,7 +8,7 @@
 
 * Contains `.gitignore` file for node_modules
 
-* Application is able to run certain tests
+* Using `jest`, we test each shape class' `render()` method, & return SVG file with shape color
 
 ## Installation
 
@@ -17,6 +17,7 @@
 - Type `npm i` then hit enter to install required packages
 - Type `node index.js` then hit enter to start the application
 - Finish answering questions in the prompt window
+- After SVG is generated, type `jest`
 
 ## Video Tutorial 
 
