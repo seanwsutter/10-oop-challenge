@@ -32,14 +32,13 @@ const questions = [
 
 // write logo.svg file to example folder
 function writeFileSVG(data) {
-  fs.writeFile("./example/logo.svg", data, (err) => {
-    err ? console.log("error:", err) : console.log("Generated logo.svg");
-  })
+  fs.writeFile("./example/logo.svg", data, (err) =>
+    err ? console.log("error:", err) : console.log("Generated logo.svg"));
+
 }
 
 // generate logo.svg file
 function generateSVG(response) {
-
   if (response.logoShape === "Triangle") {
     const triangle = new Triangle(response.logoText, response.logoTextColor, response.logoShapeColor)
     return triangle.render();
@@ -57,9 +56,9 @@ function generateSVG(response) {
 // initialize logo generator
 async function init() {
   const response = await inquirer.prompt(questions);
-  shapeOption = response["logoShape"]
-
+  console.log(response);
   writeFileSVG(generateSVG(response));
+
 }
 init()
 
@@ -77,17 +76,21 @@ function lessThanFour() {
 }
 
 function lessThanFour(userInput) {
-    var userInput;
+  var userInput;
     if (response.logoText.length > 0 && response.logoText.length < 4) {
       userInput = response.logoText
     } else {
       console.log("please enter 1-3 characters");
       return;
-    }
-  }
+    } 
+}
 
+shapeColorOption = response.logoShapeColor
+console.log("shape color:", shapeColorOption);
+shapeOption = response["logoShape"]
+console.log("shape:", shapeOption);
 
-// example test 
+//example test 
 const shape = new Triangle();
 shape.setColor("blue");
 expect(shape.render()).toEqual('<polygon points="150, 18 244, 182 56, 182" fill="blue" />');
