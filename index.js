@@ -45,7 +45,7 @@ function init() {
 
   // triangle
   class Triangle {
-    constructor(logoText, logoTextColor, logoShapeColor) {
+    constructor(logoText, logoTextColor, ) {
       this.logoText = logoText
       this.logoTextColor = logoTextColor
       this.logoShapeColor = logoShapeColor
@@ -58,7 +58,7 @@ function init() {
     }
   };
   // generate logo.svg file
-  function generateSVG(fileName, response) {
+  function generateSVG(response) {
     if (response.logoShape === "Triangle") {
       const triangle = new Triangle(response.logoText, response.logoTextColor, response.logoShapeColor)
       return triangle.render();
@@ -71,14 +71,12 @@ function init() {
       const square = new Square(response.logoText, response.logoTextColor, response.logoShapeColor)
       return square.render();
     }
-  }
+}
+  
+fs.writeFile("./example/logo.svg", data, (err) =>
+  err ? console.log(err) : console.log("Generated logo.svg, check example folder.."));
 
-  // write logo.svg file to example folder
-  function writeFileSVG(fileName, data) {
-    fs.writeFile("./example/logo.svg", data, (err) =>
-      err ? console.log(err) : console.log("Generated logo.svg, check example folder.."));
-  }
-
+  
 /* 
 
 Process
@@ -108,6 +106,13 @@ Testing
 */
 
 /* comments
+
+// write logo.svg file to example folder
+  function writeFileSVG(fileName, data) {
+    fs.writeFile("./example/logo.svg", data, (err) =>
+      err ? console.log(err) : console.log("Generated logo.svg, check example folder.."));
+  }
+
 // questions - logoText, logoTextColor, logoShape/select choice, logoShapeCholor
   const questions = [
     {
