@@ -1,75 +1,150 @@
-// packages - fs & inquirer 
+// import packages - fs & inquirer 
 const fs = require("fs");
 const inquirer = require("inquirer");
-const { Triangle, Circle, Square } = require("./lib/shapes.js")
 
+// import shape classes 
+const { Triangle, Circle, Square } = require("./lib/shapes");
 
-// questions - logoText, logoTextColor, logoShape/select choice, logoShapeCholor
-const questions = [
-  {
-    name: "logoText",
-    type: "input",
-    message: "Enter logo text, up to three characters",
-    // lessThanFour(),
-  },
-  {
-    name: "logoTextColor",
-    type: "input",
-    message: "Enter logo text color"
-  },
-  {
-    name: "logoShape",
-    type: "list",
-    message: "Select logo shape",
-    choices: ["Triangle", "Circle", "Square"]
-  },
-  {
-    name: "logoShapeColor",
-    type: "input",
-    message: "Enter logo shape color"
+function init() {
+  // questions - logoText, logoTextColor, logoShape/select choice, logoShapeCholor
+  inquirer.prompt([
+    {
+      name: "logoText",
+      type: "input",
+      message: "Enter logo text, up to three characters"
+    },
+    {
+      name: "logoTextColor",
+      type: "input",
+      message: "Enter logo text color"
+    },
+    {
+      name: "logoShape",
+      type: "list",
+      message: "Select logo shape",
+      choices: ["Triangle", "Circle", "Square"]
+    },
+    {
+      name: "logoShapeColor",
+      type: "input",
+      message: "Enter logo shape color"
+    }
+  ])
+    .then((response) => {
+      if (response.text.input >= 4) {
+        console.log("enter 3 characters max", "");
+        init();
+      } else {
+        console.log(response);
+        generateSVG(fileName, response)
+      }
+    });
   }
-];
+  
+  init();
 
-// write logo.svg file to example folder
-function writeFileSVG(data) {
-  fs.writeFile("./example/logo.svg", data, (err) =>
-    err ? console.log("error:", err) : console.log("Generated logo.svg"));
+  // triangle
+  class Triangle {
+    constructor(logoText, logoTextColor, logoShapeColor) {
+      this.logoText = logoText
+      this.logoTextColor = logoTextColor
+      this.logoShapeColor = logoShapeColor
+    }
+    render() {
+      return `<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="150, 18 244, 182 56, 182" fill="${this.logoShapeColor}"/>
+      <text x="150" y="150" font-size="60" text-anchor="middle" fill="${this.logoTextColor}">${this.logoText}</text>
+      </svg>`;
+    }
+  };
+  // generate logo.svg file
+  function generateSVG(fileName, response) {
+    if (response.logoShape === "Triangle") {
+      const triangle = new Triangle(response.logoText, response.logoTextColor, response.logoShapeColor)
+      return triangle.render();
 
-}
+    } else if (response.logoShape === "Circle") {
+      const circle = new Circle(response.logoText, response.logoTextColor, response.logoShapeColor)
+      return circle.render();
 
-// generate logo.svg file
-function generateSVG(response) {
-  if (response.logoShape === "Triangle") {
-    const triangle = new Triangle(response.logoText, response.logoTextColor, response.logoShapeColor)
-    return triangle.render();
-
-  } else if (response.logoShape === "Circle") {
-    const circle = new Circle(response.logoText, response.logoTextColor, response.logoShapeColor)
-    return circle.render();
-
-  } else if (response.logoShape === "Square") {
-    const square = new Square(response.logoText, response.logoTextColor, response.logoShapeColor)
-    return square.render();
+    } else if (response.logoShape === "Square") {
+      const square = new Square(response.logoText, response.logoTextColor, response.logoShapeColor)
+      return square.render();
+    }
   }
-}
 
-// initialize logo generator
-async function init() {
-  const response = await inquirer.prompt(questions);
-  console.log(response);
-  writeFileSVG(generateSVG(response));
+  // write logo.svg file to example folder
+  function writeFileSVG(fileName, data) {
+    fs.writeFile("./example/logo.svg", data, (err) =>
+      err ? console.log(err) : console.log("Generated logo.svg, check example folder.."));
+  }
 
-}
-init()
+/* 
 
+Process
+  ask questions
+  subclass you choose is based on shape the user chooses
+  subclass extends the parent class
 
+Properties
+  logo text
+  logo text color
+  logo shape
+  logo shape color
 
+Use methods for:
+  whatever work all shapes of any kind need
+  whatever work any individual shapoes need
+  write a file containing the final SVG code
 
+Write unit tests to verify that these methods work
+
+Jest - install as dev dependency 
+Testing
+  write code first
+  write automated test to run the code under specific conditions
+  we tell the test by defining what the successful result should look like under those conditions
+
+*/
 
 /* comments
+// questions - logoText, logoTextColor, logoShape/select choice, logoShapeCholor
+  const questions = [
+    {
+      name: "logoText",
+      type: "input",
+      message: "Enter logo text, up to three characters",
+      // lessThanFour(),
+    },
+    {
+      name: "logoTextColor",
+      type: "input",
+      message: "Enter logo text color"
+    },
+    {
+      name: "logoShape",
+      type: "list",
+      message: "Select logo shape",
+      choices: ["Triangle", "Circle", "Square"]
+    },
+    {
+      name: "logoShapeColor",
+      type: "input",
+      message: "Enter logo shape color"
+    }
+  ];
+
+  // initialize logo generator
+  async function init() {
+    const response = await inquirer.prompt(questions);
+    console.log(response);
+    writeFileSVG(generateSVG(response));
+
+  }
+  init()
 
 function lessThanFour() {
-  if (response.logoText.input >= 4) {
+  if (response.text.input >= 4) {
     console.log("enter 1-3 chracters");
     return;
   }
@@ -84,6 +159,53 @@ function lessThanFour(userInput) {
       return;
     } 
 }
+// TODO: Create a class constructor named ForumItem that takes in 'authorName', 'text', and 'createdOn'.
+class ForumItem {
+  constructor(authorName, text, createdOn) {
+    this.authorName = authorName;
+    this.text = text;
+    this.createdOn = createdOn;
+  }
+}
+
+// TODO: Setup BlogPost and Comment so they inherit their structure from ForumItem.
+class BlogPost extends ForumItem {
+  constructor(authorName, title, text, createdOn) {
+    super(authorName, text, createdOn);
+    this.title = title;
+    this.comments = [];
+  }
+
+  addComment(comment) {
+    this.comments.push(comment);
+  }
+}
+
+class Comment extends ForumItem {
+  constructor(authorName, text, createdOn, reaction) {
+    super(authorName, text, createdOn);
+    this.reaction = reaction;
+  }
+}
+
+// TODO: Create a new object using the BlogPost class constructor.
+const newPost = new BlogPost(
+  'John Doe',
+  'My Fourth Post',
+  'Dogs, cats, and snakes are super cute!',
+  '12/19/2021'
+);
+
+// TODO: Create a new object using the Comment class constructor.
+const newComment = new Comment(
+  'Jane Doe',
+  'This post is really awesome!',
+  '12/20/2021',
+  '🐶😺🐍'
+);
+// TODO: Log both newly created BlogPost and Comment to the console.
+console.log(newPost);
+console.log(newComment);
 
 shapeColorOption = response.logoShapeColor
 console.log("shape color:", shapeColorOption);
