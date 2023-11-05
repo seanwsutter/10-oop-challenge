@@ -5,78 +5,59 @@ const inquirer = require("inquirer");
 // import shape classes 
 const { Triangle, Circle, Square } = require("./lib/shapes");
 
-function init() {
-  // questions - logoText, logoTextColor, logoShape/select choice, logoShapeCholor
-  inquirer.prompt([
-    {
-      name: "logoText",
-      type: "input",
-      message: "Enter logo text, up to three characters"
-    },
-    {
-      name: "logoTextColor",
-      type: "input",
-      message: "Enter logo text color"
-    },
-    {
-      name: "logoShape",
-      type: "list",
-      message: "Select logo shape",
-      choices: ["Triangle", "Circle", "Square"]
-    },
-    {
-      name: "logoShapeColor",
-      type: "input",
-      message: "Enter logo shape color"
-    }
-  ])
-    .then((response) => {
-      if (response.text.input >= 4) {
-        console.log("enter 3 characters max", "");
-        init();
-      } else {
-        console.log(response);
-        generateSVG(fileName, response)
-      }
-    });
+questions = [
+  {
+    name: "logoText",
+    type: "input",
+    message: "Enter logo text, up to three characters"
+  },
+  {
+    name: "logoTextColor",
+    type: "input",
+    message: "Enter logo text color"
+  },
+  {
+    name: "logoShape",
+    type: "list",
+    message: "Select logo shape",
+    choices: ["Triangle", "Circle", "Square"]
+  },
+  {
+    name: "logoShapeColor",
+    type: "input",
+    message: "Enter logo shape color"
   }
-  
-  init();
+]
 
-  // triangle
-  class Triangle {
-    constructor(logoText, logoTextColor, ) {
-      this.logoText = logoText
-      this.logoTextColor = logoTextColor
-      this.logoShapeColor = logoShapeColor
-    }
-    render() {
-      return `<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="150, 18 244, 182 56, 182" fill="${this.logoShapeColor}"/>
-      <text x="150" y="150" font-size="60" text-anchor="middle" fill="${this.logoTextColor}">${this.logoText}</text>
-      </svg>`;
-    }
-  };
-  // generate logo.svg file
-  function generateSVG(response) {
-    if (response.logoShape === "Triangle") {
-      const triangle = new Triangle(response.logoText, response.logoTextColor, response.logoShapeColor)
-      return triangle.render();
+// generate logo.svg file
+function generateSVG(response) {
+  if (response.logoShape === "Triangle") {
+    const triangle = new Triangle(response.logoText, response.logoTextColor, response.logoShapeColor)
+    return triangle.render();
 
-    } else if (response.logoShape === "Circle") {
-      const circle = new Circle(response.logoText, response.logoTextColor, response.logoShapeColor)
-      return circle.render();
+  } else if (response.logoShape === "Circle") {
+    const circle = new Circle(response.logoText, response.logoTextColor, response.logoShapeColor)
+    return circle.render();
 
-    } else if (response.logoShape === "Square") {
-      const square = new Square(response.logoText, response.logoTextColor, response.logoShapeColor)
-      return square.render();
-    }
+  } else if (response.logoShape === "Square") {
+    const square = new Square(response.logoText, response.logoTextColor, response.logoShapeColor)
+    return square.render();
+  }
 }
-  
-fs.writeFile("./example/logo.svg", data, (err) =>
-  err ? console.log(err) : console.log("Generated logo.svg, check example folder.."));
 
-  
+// initialize logo generator
+async function init() {
+  const response = await inquirer.prompt(questions);
+  console.log(response);
+  writeFileSVG(generateSVG(response));
+}
+init()
+
+function writeFileSVG(data) {
+  fs.writeFile("./example/logo.svg", data, (err) =>
+    err ? console.log(err) : console.log("Generated logo.svg, check example folder.."));
+}
+
 /* 
 
 Process
