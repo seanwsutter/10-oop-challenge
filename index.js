@@ -3,7 +3,7 @@ const fs = require("fs");
 const inquirer = require("inquirer");
 
 // import shape classes 
-const { Triangle, Circle, Square } = require("./lib/shapes");
+const { Triangle, Circle, Square } = require("./lib/shapes.js");
 
 questions = [
   {
@@ -34,6 +34,7 @@ function generateSVG(response) {
   if (response.logoShape === "Triangle") {
     const triangle = new Triangle(response.logoText, response.logoTextColor, response.logoShapeColor)
     return triangle.render();
+
 
   } else if (response.logoShape === "Circle") {
     const circle = new Circle(response.logoText, response.logoTextColor, response.logoShapeColor)
